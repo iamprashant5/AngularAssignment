@@ -1,0 +1,76 @@
+<h2 class="text-center">Enter the User Details</h2>
+<form class="form w-50 ms-auto me-auto" [formGroup]="createUserForm" (ngSubmit)="createUser()">
+    <div class="form-group mb-2 ">
+      <label for="fName" class="">First Name</label>
+      <input
+        type="text"
+        class="form-control"
+        aria-describedby="emailHelp"
+        placeholder="Enter first Name"
+        formControlName="firstName"
+      />
+      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+    </div>
+    <div class="form-group mb-2">
+      <label for="mName">Middle Name</label>
+      <input
+        type="text"
+        class="form-control"
+        id="mName"
+        placeholder="Enter Middle Name"
+        formControlName="middleName"
+      />
+    </div>
+    <div class="form-group mb-2">
+      <label for="lName">Last Name</label>
+      <input
+        type="text"
+        class="form-control"
+        id="lName"
+        placeholder="Enter Last Name"
+        formControlName="lastName"
+
+      />
+    </div>
+    <div class="form-group mb-2">
+      <label for="pNo">Phone Number</label>
+      <input
+        type="text"
+        class="form-control"
+        id="pNo"
+        placeholder="Enter Phone Number"
+        formControlName="phoneNumber"
+      />
+    </div>
+    <div class="form-group mb-2">
+      <label for="email">Email</label>
+      <input
+        type="text"
+        class="form-control"
+        id="email"
+        placeholder="Enter Email"
+        formControlName="email"
+
+      />
+    </div>
+    <div class="form-group mb-2">
+      <label for="address">Address</label>
+      <input
+        type="text"
+        class="form-control"
+        id="address"
+        placeholder="Enter address"
+        formControlName="address"
+      />
+    </div>
+    <div class="form-group mb-2">
+      <label for="role">Role</label>
+      <select id="role" formControlName="role">
+        <option value="Admin">Admin</option>
+        <option value="SuperAdmin">SuperAdmin</option>
+        <option value="Subscriber">Subscriber</option>
+
+      </select>
+    </div>
+    <button type="submit" [disabled]="createUserForm.invalid" class="btn btn-primary">Submit</button>
+  </form>

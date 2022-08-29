@@ -1,0 +1,24 @@
+<h1 class="text-center">List of Users</h1>
+<table class="table">
+  <thead class="thead-dark">
+    <tr id="heading">
+      <th scope="col">#</th>
+      <th *ngFor="let key of this.keys">{{ key }}</th>
+      <th scope="col">Perform</th>    
+    </tr>
+  </thead>
+  <tbody id="table-body">
+    <tr *ngFor="let user of this.usersData; let i = index" >
+      <th scope="row">{{ i + 1 }}</th>
+      <td *ngFor="let el of this.keys" class="(i)"  [attr.contenteditable]="editable.index==i && editable.value?'true':'false'">
+        {{ user[el] }}
+      </td>
+      <td>
+        <button [class]="'edit'+i" [ngClass]="editable.index==i && editable.value?'d-none':''" ><fa-icon [icon]="faEdit" (click)="editRow(i)"></fa-icon></button>
+        <button [class]="'remove'+i" [ngClass]="editable.index==i && editable.value?'d-none':''"><fa-icon [icon]="faRemove" (click)="removeRow(i)"></fa-icon></button>
+        <button class="btn btn-primary" [ngClass]="editable.index==i && editable.value?'':'d-none'" [class]="'save'+i" (click)="save(i)" >Save</button>
+        <button class="btn btn-secondary" [ngClass]="editable.index==i && editable.value?'':'d-none'"[class]="'cancel'+i" (click)="cancel(i)">Cancel</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
