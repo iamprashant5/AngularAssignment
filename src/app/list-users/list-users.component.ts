@@ -1,86 +1,108 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  SimpleChanges,
+  OnChanges,
+} from '@angular/core';
 import { faEdit, faSave } from '@fortawesome/free-solid-svg-icons';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { data, userKey } from '../data';
-
+import { data, Role, userKey } from '../data';
+import {UsersDataService} from '../service/users-data.service'
 @Component({
   selector: 'app-list-users',
   templateUrl: './list-users.component.html',
   styleUrls: ['./list-users.component.css'],
 })
-export class ListUsersComponent implements OnInit {
-  usersData: data[];
+export class ListUsersComponent implements OnInit, OnChanges {
+  usersData:any;
   keys: Array<keyof typeof userKey[0]>;
   faEdit = faEdit;
   faRemove = faTrash;
-  editable= {
-    index:0,
-    value:false
-  }
+  editable = {
+    id: 0,
+    value: false,
+  };
 
-  constructor() {
-    const users = localStorage.getItem('user');
-    const dat: data[] = users ? JSON.parse(users) : [];
-    this.usersData = this.newData.length ? this.newData : dat;
+  @Input() hero: data[] = [];
+  constructor(private userDataApi:UsersDataService) {
+    userDataApi.users().subscribe((data)=>{
+    console.log(data,"api call")
+    
+      this.usersData=data
+    })
     this.keys = Object.keys(userKey[0]) as Array<keyof typeof userKey[0]>;
-    console.log(this.usersData, this.keys, this.newData, 'aa');
   }
-  @Input() newData: data[] = [];
-  ngOnInit(): void {
-    console.log(this.newData, 'ss');
-    const users = localStorage.getItem('user');
-    const dat: data[] = users ? JSON.parse(users) : [];
-    this.usersData = this.newData.length ? this.newData : dat;
+  ngOnChanges(changes: SimpleChanges) {
+    console.log(changes['hero'].currentValue[0],"ng change");
+   if (changes['hero'].currentValue[0]){
+     this.usersData.push(changes['hero'].currentValue[0]);
+   } 
   }
 
-  removeRow(index: number) {
-    this.usersData = this.usersData.filter((el, ind) => ind !== index);
-    localStorage.setItem('user', JSON.stringify(this.usersData));
+  ngOnInit(): void {
+  }
+
+  removeRow(id: number) {
+    this.usersData = this.usersData.filter((el:any, ind:number) => el.id !== id);
+    // localStorage.setItem('user', JSON.stringify(this.usersData));
+    this.userDataApi.deleteUserApi(id).subscribe()
   }
 
   editRow(index: number) {
-    this.editable={
-      index:index,value:true
+    this.editable = {
+      id: index,
+      value: true,
+    };
+  }
+  save(id: number,index:number) {
+    this.editable = {
+      id: id,
+      value: false,
+    };
+    const table = document.querySelector('.table')!;
+    const tr = table.getElementsByTagName('tr')!;
+    const td1 = tr[index+1].getElementsByTagName('td')!;
+
+    // console.log(tr[index], 'tr', td1.item(7), 'td');
+    console.log(td1)
+    type ObjectKey = keyof typeof userKey[0];
+    type roleV = keyof typeof Role;
+
+    const newObj : any = {
+      firstName: '',
+      middleName: '',
+      lastName: '',
+      phoneNumber: '',
+      email: '',
+      address: '',
+      role: 0,
+    };
+
+    for (let i = 0; i < td1.length - 1; i++) {
+      if(i==td1.length-2){
+        newObj['role'] = td1.item(i)?.innerHTML? Number(td1.item(i)?.innerHTML) :0
+      }else{
+        newObj[this.keys[i] as ObjectKey] = td1.item(i)?.innerHTML!;
+      }
     }
- 
-
-  }
-save(index:number){
-  this.editable={
-    index:index,
-    value:false
-  }
-  const table = document.querySelector('.table')!;
-  const tr = table.getElementsByTagName('tr')!;
-  const td1 = tr[index + 1].getElementsByTagName('td')!;
-
-  console.log(tr[index + 1], 'tr', td1.item(7), 'td');
-  type ObjectKey = keyof typeof userKey[0];
-
-  const newObj  = {
-    firstName:'',
-    middleName:'',
-    lastName:'',
-    phoneNumber:'',
-    email:'',
-    address:'',
-    role:''
+    // const newArr = [
+    //   ...this.usersData.slice(0, index),
+    //   newObj,
+    //   ...this.usersData.slice(index + 1),
+    // ];
+    // localStorage.setItem('user', JSON.stringify(newArr));
+   console.log(newObj,"new obj")
+    this.userDataApi.patchUserApi(newObj,id).subscribe(data=>console.log(data,"patch api"))
   }
 
-  for (let i = 0; i < td1.length - 1; i++) {
-    newObj[this.keys[i] as ObjectKey] = td1.item(i)?.innerHTML!
+  cancel(index: number) {
+    this.editable = {
+      id: index,
+      value: false,
+    };
+    this.ngOnInit();
   }
-  const newArr = [...this.usersData.slice(0,index),newObj ,...this.usersData.slice(index+1)]
-  localStorage.setItem('user',JSON.stringify(newArr))
-
-}
-
-cancel(index:number){
-  this.editable={
-    index:index,
-    value:false
-  }
-  this.ngOnInit()
-}
-
 }

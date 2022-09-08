@@ -1,7 +1,8 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { data, Role } from '../data';
-
+import {UsersDataService} from '../service/users-data.service'
 @Component({
   selector: 'app-create-user',
   templateUrl: './create-user.component.html',
@@ -39,18 +40,24 @@ export class CreateUserComponent implements OnInit {
       role: Role[submitVal.role as roleV],
     };
     const user = localStorage.getItem('user');
-    if (!user) {
-      localStorage.setItem('user', JSON.stringify([obj]));
-    } else {
-      const userJsn = JSON.parse(user);
-      userJsn.push(obj);
-      localStorage.setItem('user', JSON.stringify(userJsn));
-    }
+    // if (!user) {
+    
+    //   // localStorage.setItem('user', JSON.stringify([obj]));
+    // } else {
+    //   const userJsn = JSON.parse(user);
+    //   userJsn.push(obj);
+    //   this.userDataApi.save(obj).subscribe((data)=>{
+    //   })
+    //   // localStorage.setItem('user', JSON.stringify(userJsn));
+    // }
+    this.userDataApi.save(obj).subscribe((data)=>{
+      console.log(data)
+    })
     this.updateDataEvent.emit(obj);
 
     this.createUserForm.reset();
   }
-  constructor() {}
+  constructor(private userDataApi:UsersDataService) {}
   @Output() updateDataEvent = new EventEmitter<data>();
   ngOnInit(): void {}
 }

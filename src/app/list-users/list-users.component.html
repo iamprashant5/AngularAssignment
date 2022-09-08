@@ -9,15 +9,15 @@
   </thead>
   <tbody id="table-body">
     <tr *ngFor="let user of this.usersData; let i = index" >
-      <th scope="row">{{ i + 1 }}</th>
-      <td *ngFor="let el of this.keys" class="(i)"  [attr.contenteditable]="editable.index==i && editable.value?'true':'false'">
+      <th scope="row">{{ i+1 }}</th>
+      <td *ngFor="let el of this.keys" class="(i)"  [attr.contenteditable]="editable.id==user.id && editable.value?'true':'false'">
         {{ user[el] }}
       </td>
       <td>
-        <button [class]="'edit'+i" [ngClass]="editable.index==i && editable.value?'d-none':''" ><fa-icon [icon]="faEdit" (click)="editRow(i)"></fa-icon></button>
-        <button [class]="'remove'+i" [ngClass]="editable.index==i && editable.value?'d-none':''"><fa-icon [icon]="faRemove" (click)="removeRow(i)"></fa-icon></button>
-        <button class="btn btn-primary" [ngClass]="editable.index==i && editable.value?'':'d-none'" [class]="'save'+i" (click)="save(i)" >Save</button>
-        <button class="btn btn-secondary" [ngClass]="editable.index==i && editable.value?'':'d-none'"[class]="'cancel'+i" (click)="cancel(i)">Cancel</button>
+        <button [class]="'edit'+user.id" [ngClass]="editable.id==user.id && editable.value?'d-none':''" ><fa-icon [icon]="faEdit" (click)="editRow(user.id)"></fa-icon></button>
+        <button [class]="'remove'+user.id" [ngClass]="editable.id==user.id && editable.value?'d-none':''"><fa-icon [icon]="faRemove" (click)="removeRow(user.id)"></fa-icon></button>
+        <button class="btn btn-primary" [ngClass]="editable.id==user.id && editable.value?'':'d-none'" [class]="'save'+user.id" (click)="save(user.id,i)" >Save</button>
+        <button class="btn btn-secondary" [ngClass]="editable.id==user.id && editable.value?'':'d-none'"[class]="'cancel'+user.id" (click)="cancel(user.id)">Cancel</button>
       </td>
     </tr>
   </tbody>

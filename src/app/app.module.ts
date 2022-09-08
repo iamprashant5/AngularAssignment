@@ -10,6 +10,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import { ListUsersComponent } from './list-users/list-users.component'
 // import {AngularFontAwesomeModule} from 'angular-font-awesome';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
+import {HttpClientModule} from '@angular/common/http'
 @NgModule({
   declarations: [
     AppComponent,
@@ -23,7 +24,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
     FormsModule,
     ReactiveFormsModule,
     // AngularFontAwesomeModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
